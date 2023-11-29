@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import HeaderNoAuth from '../src/components/homeNoAuth/headerNoAuth/index'
+import HeaderNoAuth from '../src/components/homeNoAuth/headerNoAuth/'
+import PresentationSection from '../src/components/homeNoAuth/presentationSection/'
 import styles from '../src/styles/homeNoAuth.module.scss'
 
 const HomeNoAuth = () => {
@@ -12,7 +13,10 @@ const HomeNoAuth = () => {
             <meta name="description" content="A video streaming app" />
         </Head>
         <main>
+            <div className={styles.sectionBackground}>
             <HeaderNoAuth/>
+            <PresentationSection/>
+            </div>
         </main>
         </>
     )
