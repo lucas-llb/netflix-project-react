@@ -7,6 +7,7 @@ import styles from '../src/styles/homeNoAuth.module.scss'
 import { GetStaticProps } from 'next'
 import SerieService, { SerieType } from '@/services/serieService'
 import { ReactNode } from 'react'
+import Footer from '@/components/common/footer'
 
 interface IndexPageProps {
     children?: ReactNode,
@@ -29,6 +30,7 @@ const HomeNoAuth = ({serie}: IndexPageProps) => {
             </div>
             <CardsSection/>
             <SlideSection newestSeries={serie}></SlideSection>
+            <Footer></Footer>
         </main>
         </>
     )
