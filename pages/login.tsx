@@ -14,6 +14,11 @@ const Login = function () {
     const [ toastIsOpen , setToastIsOpen ] = useState(false);
     const [ toastMesage, setToastMessage ] = useState("");
 
+    useEffect(()=> {
+      if(sessionStorage.getItem("netflix-token")){
+        router.push("/home");
+      }
+    }, [])
     
     useEffect(() => {
         const registerSuccess = router.query.registered;

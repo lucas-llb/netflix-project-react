@@ -26,6 +26,21 @@ const SerieService = {
         });
 
         return res;
+    },
+    getFeaturedSeries: async () => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.get("/series/featured", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            console.log(error.response.data.message);
+
+            return error.response;
+        });
+
+        return res;
     }
 };
 

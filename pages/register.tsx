@@ -3,7 +3,7 @@ import styles from "../src/styles/registerLogin.module.scss";
 import HeaderGeneric from "@/components/common/headerGeneric";
 import { Container, Button, Form, FormGroup, Label, Input } from "reactstrap";
 import Footer from "@/components/common/footer";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import authService from "@/services/authService";
 import { useRouter } from "next/router";
 import ToastComponent from "@/components/common/toast";
@@ -12,6 +12,13 @@ const Register = function () {
     const router = useRouter();
     const [ toastIsOpen , setToastIsOpen ] = useState(false);
     const [ toastMesage, setToastMessage ] = useState("");
+
+    useEffect(()=> {
+      if(sessionStorage.getItem("netflix-token")){
+        router.push("/home");
+      }
+    }, [])
+
     const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
