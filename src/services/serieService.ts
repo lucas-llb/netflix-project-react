@@ -18,10 +18,8 @@ export type SerieType = {
 };
 
 const SerieService = {
-    getNewestSerie: async () => {
+    getNewestSeries: async () => {
         const res = await api.get("/series/newest").catch((error) => {
-            console.log(error.response.data.message);
-
             return error.response;
         });
 
@@ -35,8 +33,46 @@ const SerieService = {
                 Authorization: `Bearer ${token}`
             }
         }).catch((error) => {
-            console.log(error.response.data.message);
+            return error.response;
+        });
 
+        return res;
+    },
+    addToFavorite: async (courseId: number | string) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.post("/favorites", {courseId},{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
+    },
+    removeFavorite: async (courseId: number | string) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.delete("/favorites", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: {courseId}
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
+    },
+    getFavorites: async () => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.get("/favorites", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
             return error.response;
         });
 
