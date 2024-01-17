@@ -2,14 +2,24 @@ import { Container, Form, Input } from "reactstrap";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import Modal from "react-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import ProfileService from "@/services/profileService";
 
 Modal.setAppElement("#__next");
 
 const HeaderAuth = function () {
-    const router = useRouter();
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [initials, setInitials] = useState("");
+
+  useEffect(() => {
+    ProfileService.fetchCurrent().then((user => {
+      const firstNameInitial = user.fisrtName.slice(0,1);
+      const lastNameInitial = user.lastName.slice(0,1);
+      setInitials(firstNameInitial+lastNameInitial);
+    }))
+  },[])
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -22,8 +32,8 @@ const HeaderAuth = function () {
   const handleLogout = () => {
     sessionStorage.clear();
 
-    router.push("/")
-  }
+    router.push("/");
+  };
   return (
     <>
       <Container className={styles.nav}>
@@ -49,7 +59,7 @@ const HeaderAuth = function () {
             className={styles.searchImg}
           />
           <p className={styles.userProfile} onClick={handleOpenModal}>
-            AB
+            {initials}
           </p>
         </div>
         <Modal
@@ -59,10 +69,12 @@ const HeaderAuth = function () {
           className={styles.modal}
           overlayClassName={styles.overlayModal}
         >
-            <Link href="/profile">
-                <p className={styles.modalLink}>My configurations</p>
-            </Link>
-            <p className={styles.modalLink} onClick={handleLogout}>Exit</p>
+          <Link href="/profile">
+            <p className={styles.modalLink}>My configurations</p>
+          </Link>
+          <p className={styles.modalLink} onClick={handleLogout}>
+            Exit
+          </p>
         </Modal>
       </Container>
     </>
