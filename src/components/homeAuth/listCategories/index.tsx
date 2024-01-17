@@ -1,17 +1,14 @@
 import CategoriesService, { CategoryType } from "@/services/categoriesService";
 import useSWR from "swr";
 import ListCategoriesSlide from "../listCategoriesSlide";
+import PageSpinner from "@/components/common/spinner";
 
 const ListCategory = function () {
     const { data, error } = useSWR("/listCategories", CategoriesService.getCategories);
 
     if (error) return error;
     if (!data) {
-      return (
-        <>
-          <p>Loading...</p>
-        </>
-      );
+      return (<PageSpinner/>);
     }
     
     return (<>

@@ -4,17 +4,14 @@ import SerieService, { SerieType } from "@/services/serieService";
 import HeaderAuth from "@/components/common/headerAuth";
 import { Button, Container } from "reactstrap";
 import Link from "next/link";
+import PageSpinner from "@/components/common/spinner";
 
 const FeaturedSection = function () {
   const { data, error } = useSWR("/featured", SerieService.getFeaturedSeries);
 
   if (error) return error;
   if (!data) {
-    return (
-      <>
-        <p>Loading...</p>
-      </>
-    );
+    return (<PageSpinner/>);
   }
 
   return (

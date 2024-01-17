@@ -77,6 +77,19 @@ const SerieService = {
         });
 
         return res;
+    },
+    getSearch: async (name: string) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.get(`/series/search?name=${name}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
     }
 };
 
