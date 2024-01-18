@@ -38,10 +38,10 @@ const SerieService = {
 
         return res;
     },
-    addToFavorite: async (courseId: number | string) => {
+    addToFavorite: async (serieId: number | string) => {
         const token = sessionStorage.getItem("netflix-token");
 
-        const res = await api.post("/favorites", {courseId},{
+        const res = await api.post("/favorites", {serieId},{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -51,14 +51,13 @@ const SerieService = {
 
         return res;
     },
-    removeFavorite: async (courseId: number | string) => {
+    removeFavorite: async (serieId: number | string) => {
         const token = sessionStorage.getItem("netflix-token");
 
-        const res = await api.delete("/favorites", {
+        const res = await api.delete(`/favorites/${serieId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            },
-            data: {courseId}
+            }
         }).catch((error) => {
             return error.response;
         });
@@ -90,7 +89,47 @@ const SerieService = {
         });
 
         return res;
+    },
+    getEpisodes: async (id: string | number) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.get(`/series/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
+    },
+    addLike: async (serieId: number | string) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.post("/likes", {serieId}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
+    },
+    removeLike: async (serieId: number | string) => {
+        const token = sessionStorage.getItem("netflix-token");
+
+        const res = await api.delete(`/likes/${serieId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).catch((error) => {
+            return error.response;
+        });
+
+        return res;
     }
+
 };
 
 export default SerieService;
