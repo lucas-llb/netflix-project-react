@@ -143,7 +143,7 @@ const SeriePage = function () {
             </p>
           ) : (
             serie.episodes?.map((episode) => (
-              <EpisodeList key={episode.id} episode={episode} />
+              <EpisodeList key={episode.id} episode={episode} serie={serie}/>
             ))
           )}
         </Container>
