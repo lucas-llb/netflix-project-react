@@ -2,7 +2,8 @@ import Head from "next/head";
 import styles from "../../../src/styles/episodePlayer.module.scss";
 import { useRouter } from "next/router";
 import HeaderGeneric from "@/components/common/headerGeneric";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import EpisodeService from "@/services/episodeService"
 import SerieService, { SerieType } from "@/services/serieService";
 import PageSpinner from "@/components/common/spinner";
 import { Button, Container } from "reactstrap";
@@ -11,9 +12,35 @@ import ReactPlayer from "react-player";
 const EpisodePlayer = function () {
   const router = useRouter();
   const [serie, setSerie] = useState<SerieType>();
+  const [episodeTime, setEpisodeTime] = useState(0);
+  const [getEpisodeTime, setGetEpisodeTime] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const playerRef = useRef<ReactPlayer>(null);
 
   const episodeOrder = parseFloat(router.query.id?.toString() || "");
+  const episodeId = parseFloat(router.query.episodeid?.toString() || "");
   const serieId = router.query.serieid?.toString() || "";
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("netflix-token")) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSerie();
+  }, [serieId]);
+
+  useEffect(() => {
+    handleGetEpisodeTime();
+  }, [router]);
+
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   const getSerie = async function () {
     if (typeof serieId !== "string") return;
@@ -26,20 +53,44 @@ const EpisodePlayer = function () {
   };
 
   const handleLastEpisode = () => {
-    router.push(`/serie/episode/${episodeOrder - 1}?serieid=${serie?.id}`)
-  }
+    router.push(`/serie/episode/${episodeOrder - 1}?serieid=${serie?.id}&episodeid=${episodeId}`)
+  };
 
   const handleNextEpisode = () => {
-    router.push(`/serie/episode/${episodeOrder + 1}?serieid=${serie?.id}`)
+    router.push(`/serie/episode/${episodeOrder + 1}?serieid=${serie?.id}&episodeid=${episodeId}`)
+  };
+
+  const handleGetEpisodeTime = async () => {
+    const res =  await EpisodeService.getWatchTime(episodeId);
+
+    if(res.data !== null){
+        setGetEpisodeTime(res.data.seconds)
+    }
+  };
+
+  const handleSetEpisodeTime = async () => {
+    await EpisodeService.setWatchTime({
+        episodeId: episodeId,
+        seconds: Math.round(episodeTime)});
+  };
+
+  const handlePlayerTime = () => {
+    playerRef.current?.seekTo(getEpisodeTime);
+    setIsReady(true);
+  };
+
+  if(isReady){
+    setTimeout(() => {handleSetEpisodeTime}, 1000*3)
   }
-
-
-  useEffect(() => {
-    getSerie();
-  }, [serieId]);
 
   if (serie?.episodes === undefined) {
     return <PageSpinner />;
+  }
+
+  if(episodeOrder + 1 < serie?.episodes?.length){
+    if(Math.round(episodeTime) === serie.episodes[episodeOrder].secondsLong){
+        handleNextEpisode();
+    }
   }
 
   return (
@@ -67,6 +118,9 @@ const EpisodePlayer = function () {
                 serie.episodes[episodeOrder].videoUrl
               }&token=${sessionStorage.getItem("netflix-token")}`}
               controls
+              ref={playerRef}
+              onProgress={(progress) => setEpisodeTime(progress.playedSeconds)}
+              onStart={handlePlayerTime}
             />
           )}
           <div className={styles.episodeBtnDiv}>

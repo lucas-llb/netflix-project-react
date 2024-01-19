@@ -7,11 +7,29 @@ import SerieService, { SerieType } from "@/services/serieService";
 import { Container } from "reactstrap";
 import SearchCard from "@/components/searchCard";
 import Footer from "@/components/common/footer";
+import PageSpinner from "@/components/common/spinner";
 
 const Search = function () {
   const router = useRouter();
   const searchName: any = router.query.name;
   const [searchResult, setSearchResult] = useState<SerieType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("netflix-token")) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    searchSeries();
+  }, [searchName]);
+  
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   const searchSeries = async function () {
     const res = await SerieService.getSearch(searchName);
@@ -19,9 +37,7 @@ const Search = function () {
     setSearchResult(res.data.series);
   };
 
-  useEffect(() => {
-    searchSeries();
-  }, [searchName]);
+
 
   return (
     <>

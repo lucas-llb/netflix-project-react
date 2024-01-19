@@ -10,12 +10,29 @@ import EpisodeList from "@/components/episodeList";
 import Footer from "@/components/common/footer";
 
 const SeriePage = function () {
+  const router = useRouter();
   const [serie, setSerie] = useState<SerieType>();
   const [liked, setLiked] = useState(false);
   const [favorited, setFavorited] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const router = useRouter();
   const { id } = router.query;
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("netflix-token")) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSerie();
+  }, [id]);
+
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   const getSerie = async function () {
     if (typeof id != "string") {
@@ -30,10 +47,6 @@ const SeriePage = function () {
       setFavorited(res.data.favorited);
     }
   };
-
-  useEffect(() => {
-    getSerie();
-  }, [id]);
 
   const handleLikeSerie = async () => {
     if (typeof id != "string") {
