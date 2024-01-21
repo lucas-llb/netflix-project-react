@@ -11,9 +11,21 @@ import PageSpinner from "@/components/common/spinner";
 
 const Search = function () {
   const router = useRouter();
-  const searchName: any = router.query.name;
+  const searchName = router.query.name?.toString();
   const [searchResult, setSearchResult] = useState<SerieType[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const searchSeries = async function () {
+    if(searchName != undefined){
+      const res = await SerieService.getSearch(searchName);
+
+      setSearchResult(res.data.series);
+    }
+  };
+  
+  useEffect(() => {
+    searchSeries();
+  }, [searchName]);
 
   useEffect(() => {
     if (!sessionStorage.getItem("netflix-token")) {
@@ -22,22 +34,10 @@ const Search = function () {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    searchSeries();
-  }, [searchName]);
   
   if (loading) {
     return <PageSpinner />;
   }
-
-  const searchSeries = async function () {
-    const res = await SerieService.getSearch(searchName);
-
-    setSearchResult(res.data.series);
-  };
-
-
 
   return (
     <>

@@ -37,7 +37,7 @@ const HomeNoAuth = ({serie}: IndexPageProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-    const res = await SerieService.getNewestSerie();
+    const res = await SerieService.getNewestSeries();
     return {
         props: {
             serie: res.data,

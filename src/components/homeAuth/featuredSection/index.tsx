@@ -20,7 +20,7 @@ const FeaturedSection = function () {
         data.data?.map((serie: SerieType) => (
           <div
             style={{
-              backgroundImage: `linear-gradiant(to bottom, #6666661a, #151515) url(${process.env.NEXT_PUBLIC_BASEURL}/${serie.thumbnailUrl})`,
+              backgroundImage: `linear-gradiant(to bottom, #6666661a, #151515) url(${process.env.BACKEND_API_URL}/${serie.thumbnailUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               height: "480px"

@@ -30,36 +30,6 @@ const EpisodePlayer = function () {
     }
   }, []);
 
-  useEffect(() => {
-    getSerie();
-  }, [serieId]);
-
-  useEffect(() => {
-    handleGetEpisodeTime();
-  }, [router]);
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  const getSerie = async function () {
-    if (typeof serieId !== "string") return;
-
-    const res = await SerieService.getEpisodes(serieId);
-
-    if (res.status === 200) {
-      setSerie(res.data);
-    }
-  };
-
-  const handleLastEpisode = () => {
-    router.push(`/serie/episode/${episodeOrder - 1}?serieid=${serie?.id}&episodeid=${episodeId}`)
-  };
-
-  const handleNextEpisode = () => {
-    router.push(`/serie/episode/${episodeOrder + 1}?serieid=${serie?.id}&episodeid=${episodeId}`)
-  };
-
   const handleGetEpisodeTime = async () => {
     const res =  await EpisodeService.getWatchTime(episodeId);
 
@@ -74,23 +44,53 @@ const EpisodePlayer = function () {
         seconds: Math.round(episodeTime)});
   };
 
+  const getSerie = async function () {
+    if (typeof serieId !== "string") return;
+
+    const res = await SerieService.getEpisodes(serieId);
+
+    if (res.status === 200) {
+      setSerie(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getSerie();
+  }, [serieId]);
+
+  useEffect(() => {
+    handleGetEpisodeTime();
+  }, [router]);
+
   const handlePlayerTime = () => {
     playerRef.current?.seekTo(getEpisodeTime);
     setIsReady(true);
   };
-
-  if(isReady){
-    setTimeout(() => {handleSetEpisodeTime}, 1000*3)
+  
+  if(isReady === true){
+    setTimeout(() => {handleSetEpisodeTime()}, 1000*3)
   }
-
+  
+  const handleLastEpisode = () => {
+    router.push(`/serie/episode/${episodeOrder - 1}?serieid=${serie?.id}&episodeid=${serie.episodes[episodeOrder-1]?.id}`)
+  };
+  
+  const handleNextEpisode = () => {
+    router.push(`/serie/episode/${episodeOrder + 1}?serieid=${serie?.id}&episodeid=${serie.episodes[episodeOrder+1]?.id}`)
+  };
+    
   if (serie?.episodes === undefined) {
     return <PageSpinner />;
   }
-
+  
   if(episodeOrder + 1 < serie?.episodes?.length){
     if(Math.round(episodeTime) === serie.episodes[episodeOrder].secondsLong){
-        handleNextEpisode();
+      handleNextEpisode();
     }
+  }
+  
+  if (loading) {
+    return <PageSpinner />;
   }
 
   return (
@@ -113,7 +113,7 @@ const EpisodePlayer = function () {
             <ReactPlayer
               className={styles.player}
               url={`${
-                process.env.NEXT_PUBLIC_BASEURL
+                process.env.BACKEND_API_URL
               }/episodes/stream?videoUrl=${
                 serie.episodes[episodeOrder].videoUrl
               }&token=${sessionStorage.getItem("netflix-token")}`}

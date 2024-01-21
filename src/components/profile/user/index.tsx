@@ -22,12 +22,12 @@ const UserForm = function () {
 
   useEffect(() =>{
     ProfileService.fetchCurrent().then((user) => {
-      setFirstName(user.firstName);
-      setLastName(user.lastName);
-      setPhone(user.phone);
-      setEmail(user.email);
-      setInitialEmail(user.email);
-      setCreatedAt(user.createdAt);
+      setFirstName(user.data.firstName);
+      setLastName(user.data.lastName);
+      setPhone(user.data.phone);
+      setEmail(user.data.email);
+      setInitialEmail(user.data.email);
+      setCreatedAt(user.data.createdAt);
     })
   }, []);
 
@@ -65,7 +65,7 @@ const UserForm = function () {
       <Form className={styles.form} onSubmit={handleUserUpdate}>
         <div className={styles.formName}>
           <p className={styles.nameAbbreviation}>{firstName.slice(0,1)}{lastName.slice(0,1)}</p>
-          <p className={styles.userName}>`${firstName} ${lastName}`</p>
+          <p className={styles.userName}>{firstName}&#160;{lastName}</p>
         </div>
         <div className={styles.memberTime}>
           <img

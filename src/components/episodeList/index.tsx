@@ -22,7 +22,7 @@ const EpisodeList = function ({episode, serie}:props) {
     };
 
     const handleEpisodePlayer = () => {
-        router.push(`/serie/episode${episode.order - 1}?serieid=${serie.id}&episodeid=${episode.id}`)
+        router.push(`/serie/episode/${episode.order - 1}?serieid=${serie.id}&episodeid=${episode.id}`)
     }
 
     return (<>

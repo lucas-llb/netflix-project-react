@@ -10,7 +10,7 @@ const SearchCard = function ({serie} : props) {
     return (<>
     <Link href={`/serie/${serie.id}`}>
         <div className={styles.searchCard}>
-            <img src={`process.env.NEXT_PUBLIC_BASEURL/${serie.thumbnailUrl}`} alt={serie.name} className={styles.searchCardImg}/>
+            <img src={`${process.env.BACKEND_API_URL}/${serie.thumbnailUrl}`} alt={serie.name} className={styles.searchCardImg}/>
             <p className={styles.searchCardTitle}>{serie.name}</p>
             <p className={styles.searchCardDescription}>{serie.synopsis}</p>
         </div>

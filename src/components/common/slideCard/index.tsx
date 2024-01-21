@@ -11,7 +11,7 @@ return (
     <>
     <Link href={`/serie/${serie.id}`}>
     <div className={styles.slide}>
-        <img src ={`${process.env.BACKEND_API_BASEURL}/${serie.thumbnailUrl}`} alt={serie.name}  className={styles.slideImg}/>
+        <img src ={`${process.env.BACKEND_API_URL}/${serie.thumbnailUrl}`} alt={serie.name}  className={styles.slideImg}/>
         <p className={styles.slideTitle}>{serie.name}</p>
         <p className={styles.slideDescription}>{serie.synopsis}</p>
     </div>

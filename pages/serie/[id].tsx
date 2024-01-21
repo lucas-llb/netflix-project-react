@@ -26,14 +26,6 @@ const SeriePage = function () {
     }
   }, []);
 
-  useEffect(() => {
-    getSerie();
-  }, [id]);
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
   const getSerie = async function () {
     if (typeof id != "string") {
       return;
@@ -47,6 +39,16 @@ const SeriePage = function () {
       setFavorited(res.data.favorited);
     }
   };
+
+  useEffect(() => {
+    getSerie();
+  }, [id]);
+
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+
 
   const handleLikeSerie = async () => {
     if (typeof id != "string") {
@@ -87,7 +89,7 @@ const SeriePage = function () {
       <main>
         <div
           style={{
-            backgroundImage: `linear-gradient(to bottom, #6666661a, #151515), url(${process.env.NEXT_PUBLIC_BASEURL}/${serie?.thumbnailUrl})`,
+            backgroundImage: `linear-gradient(to bottom, #6666661a, #151515), url(${process.env.BACKEND_API_URL}/${serie?.thumbnailUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             minHeight: "450px",

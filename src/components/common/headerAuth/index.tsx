@@ -14,11 +14,23 @@ const HeaderAuth = function () {
   const [initials, setInitials] = useState("");
   const [searchName, setSearchName] = useState("");
 
+  const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.push(`/search?name=${searchName}`);
+
+    setSearchName("");
+  }
+
+  const handleSearchClick = () => {
+    router.push(`/search?name=${searchName}`);
+
+    setSearchName("");
+  }
 
   useEffect(() => {
     ProfileService.fetchCurrent().then((user => {
-      const firstNameInitial = user.fisrtName.slice(0,1);
-      const lastNameInitial = user.lastName.slice(0,1);
+      const firstNameInitial = user.data.firstName.slice(0,1);
+      const lastNameInitial = user.data.lastName.slice(0,1);
       setInitials(firstNameInitial+lastNameInitial);
     }))
   },[])
@@ -37,19 +49,6 @@ const HeaderAuth = function () {
     router.push("/");
   };
 
-  const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    router.push(`search?name=${searchName}`);
-
-    setSearchName("");
-  }
-
-  const handleSearchClick = () => {
-    router.push(`search?name=${searchName}`);
-
-    setSearchName("");
-  }
 
   return (
     <>
